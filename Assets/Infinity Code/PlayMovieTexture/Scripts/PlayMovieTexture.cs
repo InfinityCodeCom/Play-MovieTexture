@@ -27,7 +27,7 @@ public class PlayMovieTexture : MonoBehaviour
 	/// <summary>
 	/// Delay before starting.
 	/// </summary>
-	public float delay = 0;
+	public float delay;
 	
 	/// <summary>
 	/// Do not change. Used for the editor.
@@ -43,7 +43,7 @@ public class PlayMovieTexture : MonoBehaviour
 	/// List detected MovieTextures.
 	/// </summary>
 	public MovieTexture[] movieTextures;
-	
+
 	public PlayMovieTextureTarget target = PlayMovieTextureTarget.gameobject;
 	
 	/// <summary>
@@ -54,7 +54,9 @@ public class PlayMovieTexture : MonoBehaviour
 	#endregion
 	
 	#region private variables
-	
+
+    private AudioListener audioListener;
+
 	/// <summary>
 	/// The aviable texture names. Do not change.
 	/// </summary>
@@ -586,9 +588,9 @@ public class PlayMovieTexture : MonoBehaviour
 		Destroy(gameObject);
 	}
 
-    private IEnumerator _StartMovies(MovieTexture[] mts, float delay)
+    private IEnumerator _StartMovies(MovieTexture[] mts, float _delay)
 	{
-		yield return new WaitForSeconds(delay);
+		yield return new WaitForSeconds(_delay);
 		StartMovies(mts);
 		Destroy(gameObject);
 	}
