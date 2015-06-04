@@ -1,8 +1,9 @@
-/*       INFINITY CODE 2013         */
-/*   http://www.infinity-code.com   */
-/*                                  */
-/*        Play MovieTexture         */
-/*          Version 1.2.2           */
+/*       INFINITY CODE 2013-2015         */
+/*     http://www.infinity-code.com      */
+
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+#define UNITY_4X
+#endif
 
 using System.Linq;
 using UnityEngine;
@@ -125,8 +126,8 @@ public class PlayMovieTexture : MonoBehaviour
 	{
 		List<MovieTexture> mts = new List<MovieTexture>();
 		
-		GUITexture[] guiTextures = (GUITexture[])FindSceneObjectsOfType(typeof(GUITexture));
-		Renderer[] renderers = (Renderer[])FindSceneObjectsOfType(typeof(Renderer));
+		GUITexture[] guiTextures = FindObjectsOfType<GUITexture>();
+	    Renderer[] renderers = FindObjectsOfType<Renderer>();
 		
         mts.AddRange(guiTextures.Where(t=>t.texture is MovieTexture).Select(t=>(MovieTexture)t.texture));
 		foreach (Renderer r in renderers)
@@ -163,12 +164,17 @@ public class PlayMovieTexture : MonoBehaviour
 	public static MovieTexture[] GetMovieTextures(GameObject target)
 	{
 		List<MovieTexture> mts = new List<MovieTexture>();
-		
-		if (target.renderer != null)
+
+#if UNITY_4X
+	    Renderer renderer = target.renderer;
+#else
+        Renderer renderer = target.GetComponent<Renderer>();
+#endif
+	    if (renderer != null)
 		{
-			for (int i = 0; i < target.renderer.sharedMaterials.Length; i++)
+			for (int i = 0; i < renderer.sharedMaterials.Length; i++)
 			{
-				Material mat = target.renderer.sharedMaterials[i];
+				Material mat = renderer.sharedMaterials[i];
 				if (mat != null)
 				{
 					for (int j = 0; j < aviableTextureNames.Length; j++) 
@@ -182,7 +188,13 @@ public class PlayMovieTexture : MonoBehaviour
 				}
 			}
 		}
-		if (target.guiTexture != null && target.guiTexture.texture is MovieTexture) mts.Add((MovieTexture)target.guiTexture.texture);
+
+#if UNITY_4X
+	    GUITexture guiTexure = target.guiTexture;
+#else
+        GUITexture guiTexure = target.GetComponent<GUITexture>();
+#endif
+	    if (guiTexure != null && guiTexure.texture is MovieTexture) mts.Add((MovieTexture)guiTexure.texture);
 		
 		return mts.ToArray();
 	}
@@ -572,7 +584,7 @@ public class PlayMovieTexture : MonoBehaviour
         }
         while (mt.isPlaying);
 
-        if (afterStop == PlayMovieTextureStopEnum.disableGameobject) gameObject.SetActiveRecursively(false);
+        if (afterStop == PlayMovieTextureStopEnum.disableGameobject) gameObject.SetActive(false);
         else if (afterStop == PlayMovieTextureStopEnum.destroyGameobject) Destroy(gameObject);
         else if (afterStop == PlayMovieTextureStopEnum.customAction)
         {
