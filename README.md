@@ -8,3 +8,5 @@ Script to search and automatically start MovieTextures.<br>
 ˖ Can be used with the material and with GUITexture;<br>
 ˖ Ability to start the video automatically, and delayed or manually;<br>
 ˖ Can be used on any GameObject. Not have to use to the object that is added to the script.<br>
+<br>
+<a href="http://infinity-code.com/en/products/">More interesting assets.</a>
